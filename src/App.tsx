@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { HomePage } from "@/pages/HomePage";
 import { JoinPage } from "@/pages/JoinPage";
 import { SignInPage } from "@/pages/SignInPage";
@@ -62,10 +63,26 @@ export const App = () => {
           <Route path="/provider/:id" element={<ProviderProfilePage />} />
           <Route path="/provider-signup" element={<ProviderSignupPage />} />
           <Route path="/patient-signup" element={<PatientSignupPage />} />
-          <Route path="/patient-dashboard" element={<PatientDashboardPage />} />
-          <Route path="/provider-dashboard" element={<ProviderDashboardPage />} />
-          <Route path="/messages" element={<MessagingPage />} />
-          <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+          <Route path="/patient-dashboard" element={
+            <ProtectedRoute requiredRole="patient">
+              <PatientDashboardPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/provider-dashboard" element={
+            <ProtectedRoute requiredRole="provider">
+              <ProviderDashboardPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/messages" element={
+            <ProtectedRoute>
+              <MessagingPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin-dashboard" element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          } />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogPostPage />} />
         </Routes>

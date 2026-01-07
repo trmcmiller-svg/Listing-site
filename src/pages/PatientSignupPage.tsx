@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
 
 export const PatientSignupPage = () => {
   const [formData, setFormData] = useState({
@@ -11,11 +13,46 @@ export const PatientSignupPage = () => {
     zipCode: "",
     agreeToTerms: false,
   });
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Patient account created! Redirecting to search...");
-    // In production, this would create the account and redirect
+    setError("");
+    setLoading(true);
+
+    try {
+      const { data: authData, error: signUpError } = await signUp(formData.email, formData.password);
+
+      if (signUpError) {
+        setError(signUpError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (authData.user) {
+        const { error: profileError } = await supabase.from("patients").insert({
+          user_id: authData.user.id,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone || null,
+          zip_code: formData.zipCode,
+        });
+
+        if (profileError) {
+          setError("Account created but profile setup failed. Please contact support.");
+          setLoading(false);
+          return;
+        }
+
+        navigate("/patient-dashboard");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,6 +68,12 @@ export const PatientSignupPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold mb-2">First Name *</label>
@@ -127,9 +170,10 @@ export const PatientSignupPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
