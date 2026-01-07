@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { VerificationQueue } from "../components/VerificationQueue";
+import { ContentModeration } from "../components/ContentModeration";
+import { BadgeAuditView } from "../components/BadgeAuditView";
+import { PlatformAnalytics } from "../components/PlatformAnalytics";
+import { AdminNotifications, AdminNotificationBell } from "../components/AdminNotifications";
 
 type User = {
   id: string;
@@ -14,7 +18,7 @@ type User = {
 };
 
 export const AdminDashboardPage = () => {
-  const [activeTab, setActiveTab] = useState<"overview" | "verifications" | "providers" | "patients" | "reports" | "settings">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "analytics" | "verifications" | "moderation" | "badges" | "notifications" | "providers" | "patients" | "settings">("overview");
 
   // Mock Data for Admin View
   const [allUsers, setAllUsers] = useState<User[]>([
@@ -112,6 +116,7 @@ export const AdminDashboardPage = () => {
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Admin Dashboard</h1>
             <div className="flex items-center gap-4">
+              <AdminNotificationBell />
               <span className="text-gray-600">Logged in as: Admin User</span>
               <Link to="/" className="text-blue-600 hover:underline">
                 Logout
@@ -150,10 +155,13 @@ export const AdminDashboardPage = () => {
             <div className="flex overflow-x-auto">
               {[
                 { id: "overview", label: "Overview" },
+                { id: "analytics", label: "Analytics" },
                 { id: "verifications", label: "Verifications" },
+                { id: "moderation", label: "Moderation" },
+                { id: "badges", label: "Badge Audit" },
+                { id: "notifications", label: "Notifications" },
                 { id: "providers", label: "Providers" },
                 { id: "patients", label: "Patients" },
-                { id: "reports", label: "Reports" },
                 { id: "settings", label: "Settings" },
               ].map((tab) => (
                 <button
@@ -196,8 +204,24 @@ export const AdminDashboardPage = () => {
               </div>
             )}
 
+            {activeTab === "analytics" && (
+              <PlatformAnalytics />
+            )}
+
             {activeTab === "verifications" && (
               <VerificationQueue />
+            )}
+
+            {activeTab === "moderation" && (
+              <ContentModeration />
+            )}
+
+            {activeTab === "badges" && (
+              <BadgeAuditView />
+            )}
+
+            {activeTab === "notifications" && (
+              <AdminNotifications />
             )}
 
             {activeTab === "providers" && (
@@ -304,29 +328,6 @@ export const AdminDashboardPage = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "reports" && (
-              <div>
-                <h2 className="text-xl font-bold mb-6">User Reports</h2>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800 mb-4">
-                  <p className="font-semibold">No new reports at this time.</p>
-                  <p className="text-sm">All reported content and users are reviewed here.</p>
-                </div>
-                {/* Mock reports list */}
-                <div className="space-y-4">
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <p className="font-semibold">Report ID: #001</p>
-                    <p className="text-sm text-gray-700">Reported by: Jane Smith (Patient)</p>
-                    <p className="text-sm text-gray-700">Reported user: Emily Chen (Provider)</p>
-                    <p className="text-sm text-gray-700 mb-2">Reason: Inappropriate content in message</p>
-                    <div className="flex gap-2">
-                      <button className="text-blue-600 hover:underline text-sm">View Conversation</button>
-                      <button className="text-red-600 hover:underline text-sm">Take Action</button>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}

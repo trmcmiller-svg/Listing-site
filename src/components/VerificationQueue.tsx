@@ -28,6 +28,8 @@ export function VerificationQueue() {
   const [selectedItem, setSelectedItem] = useState<QueueItem | null>(null);
   const [actionNotes, setActionNotes] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadQueue();
@@ -36,7 +38,7 @@ export function VerificationQueue() {
   const loadQueue = async () => {
     setLoading(true);
 
-    const { data: queueData, error: queueError } = await supabase
+    let query = supabase
       .from("verification_queue")
       .select(`
         *,
@@ -48,9 +50,17 @@ export function VerificationQueue() {
           bio,
           education
         )
-      `)
-      .in("status", ["pending", "needs_review"])
-      .order("submitted_at", { ascending: true });
+      `);
+
+    if (statusFilter === 'all') {
+      query = query.in("status", ["pending", "needs_review"]);
+    } else {
+      query = query.eq("status", statusFilter);
+    }
+
+    query = query.order("submitted_at", { ascending: true });
+
+    const { data: queueData, error: queueError } = await query;
 
     if (queueError) {
       console.error("Error loading queue:", queueError);
@@ -172,12 +182,22 @@ export function VerificationQueue() {
     );
   }
 
+  const filteredQueue = queue.filter((item) => {
+    if (!searchQuery) return true;
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      item.practitioner?.legal_name.toLowerCase().includes(searchLower) ||
+      item.practitioner?.professional_title.toLowerCase().includes(searchLower) ||
+      item.practitioner?.practitioner_type.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Verification Queue</h2>
-          <p className="text-gray-600">{queue.length} pending application{queue.length !== 1 ? "s" : ""}</p>
+          <p className="text-gray-600">{filteredQueue.length} application{filteredQueue.length !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={loadQueue}
@@ -187,10 +207,34 @@ export function VerificationQueue() {
         </button>
       </div>
 
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, title, or type..."
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) => {
+            setStatusFilter(e.target.value);
+            loadQueue();
+          }}
+          className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="all">All Pending</option>
+          <option value="pending">Pending</option>
+          <option value="needs_review">Needs Review</option>
+        </select>
+      </div>
+
       <div className="grid md:grid-cols-2 gap-6">
         {/* Queue List */}
         <div className="space-y-3">
-          {queue.map((item) => (
+          {filteredQueue.map((item) => (
             <div
               key={item.id}
               onClick={() => setSelectedItem(item)}
