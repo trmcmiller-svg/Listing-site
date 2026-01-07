@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { HomePage } from "@/pages/HomePage";
 import { JoinPage } from "@/pages/JoinPage";
 import { SignInPage } from "@/pages/SignInPage";
@@ -17,7 +18,8 @@ import { BlogPostPage } from "@/pages/BlogPostPage";
 
 export const App = () => {
   return (
-    <BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
       <div className="min-h-screen">
         {/* Navigation */}
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -134,5 +136,6 @@ export const App = () => {
         </footer>
       </div>
     </BrowserRouter>
+    </AuthProvider>
   );
 };
