@@ -95,7 +95,8 @@ export async function getContentReports(status?: string): Promise<ContentReport[
       reporter:reporter_id (full_name, email),
       reported_user:reported_user_id (full_name, email)
     `)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .limit(100);
 
   if (status) {
     query = query.eq('status', status);

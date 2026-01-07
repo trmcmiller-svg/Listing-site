@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { HomePage } from "@/pages/HomePage";
 import { JoinPage } from "@/pages/JoinPage";
 import { SignInPage } from "@/pages/SignInPage";
@@ -19,8 +20,9 @@ import { BlogPostPage } from "@/pages/BlogPostPage";
 
 export const App = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
       <div className="min-h-screen">
         {/* Navigation */}
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -152,7 +154,8 @@ export const App = () => {
           </div>
         </footer>
       </div>
-    </BrowserRouter>
-    </AuthProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 };
