@@ -12,7 +12,7 @@ import { ProviderSignupPage } from "@/pages/ProviderSignupPage";
 import { PatientSignupPage } from "@/pages/PatientSignupPage";
 import { PatientDashboardPage } from "@/pages/PatientDashboardPage";
 import { ProviderDashboardPage } from "@/pages/ProviderDashboardPage";
-import { MessagingPage } from "@/pages/MessagingPage";
+import { MessagingPageNew } from "@/pages/MessagingPageNew";
 import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
@@ -75,7 +75,7 @@ export const App = () => {
           } />
           <Route path="/messages" element={
             <ProtectedRoute>
-              <MessagingPage />
+              <MessagingPageNew />
             </ProtectedRoute>
           } />
           <Route path="/admin-dashboard" element={

@@ -149,12 +149,19 @@ Just Gorge is a trust-first discovery platform for medical aesthetics practition
 - [ ] Admin moderation UI
 - [ ] Version control system
 
-### Sprint 5: Messaging & Consult Requests
-- [ ] Consult request system
-- [ ] WebSocket integration (Supabase Realtime)
-- [ ] Plan-based rate limiting
-- [ ] Message thread UI
-- [ ] Block/report functionality
+### ✅ Sprint 5: Messaging & Consult Requests (COMPLETE)
+- ✅ Consult request system
+- ✅ WebSocket integration (Supabase Realtime)
+- ✅ Plan-based rate limiting
+- ✅ Message thread UI
+- ✅ Block/report functionality
+- ✅ Rate limiting database functions
+- ✅ Thread participants tracking
+- ✅ Real-time typing indicators
+- ✅ Unread message counts
+- ✅ Archive functionality
+
+**See:** `/SPRINT5_MESSAGING.md` for detailed documentation
 
 ### Sprint 6: Search & Discovery
 - [ ] Full-text search API
@@ -468,5 +475,5 @@ None yet - fresh implementation!
 ---
 
 Last Updated: January 7, 2026
-Sprint: 1 of 8 complete
-Status: Foundation ✅ | Verification 🚧 | Trust Engine ⏳
+Sprint: 5 of 8 complete (62.5% done)
+Status: Foundation ✅ | Verification ✅ | Trust Engine ✅ | Niccybox ✅ | Messaging ✅
