@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { VerificationQueue } from "../components/VerificationQueue";
 
 type User = {
   id: string;
@@ -13,7 +14,7 @@ type User = {
 };
 
 export const AdminDashboardPage = () => {
-  const [activeTab, setActiveTab] = useState<"overview" | "providers" | "patients" | "reports" | "settings">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "verifications" | "providers" | "patients" | "reports" | "settings">("overview");
 
   // Mock Data for Admin View
   const [allUsers, setAllUsers] = useState<User[]>([
@@ -149,6 +150,7 @@ export const AdminDashboardPage = () => {
             <div className="flex overflow-x-auto">
               {[
                 { id: "overview", label: "Overview" },
+                { id: "verifications", label: "Verifications" },
                 { id: "providers", label: "Providers" },
                 { id: "patients", label: "Patients" },
                 { id: "reports", label: "Reports" },
@@ -192,6 +194,10 @@ export const AdminDashboardPage = () => {
                   </Link>
                 </div>
               </div>
+            )}
+
+            {activeTab === "verifications" && (
+              <VerificationQueue />
             )}
 
             {activeTab === "providers" && (

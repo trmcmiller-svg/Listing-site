@@ -1,9 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
+import { OnboardingWizard } from "../components/OnboardingWizard";
 
 export const ProviderDashboardPage = () => {
+  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState<"overview" | "appointments" | "messages" | "reviews" | "analytics" | "blog" | "profile">("overview");
-  const [providerPlan, setProviderPlan] = useState<"free" | "pro" | "premium">("premium"); // Mock provider's current plan
+  const [providerPlan, setProviderPlan] = useState<"free" | "pro" | "premium">("premium");
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    checkOnboardingStatus();
+  }, [user]);
+
+  const checkOnboardingStatus = async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("practitioners")
+      .select("onboarding_completed, verification_status")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (data && !data.onboarding_completed) {
+      setShowOnboarding(true);
+    }
+
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (showOnboarding) {
+    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
+  }
 
   const navItems = [
     { id: "overview", label: "Overview", icon: "🏠" },
