@@ -163,12 +163,19 @@ Just Gorge is a trust-first discovery platform for medical aesthetics practition
 
 **See:** `/SPRINT5_MESSAGING.md` for detailed documentation
 
-### Sprint 6: Search & Discovery
-- [ ] Full-text search API
-- [ ] Location-based search
-- [ ] Specialty filtering
-- [ ] Trust-weighted ranking
-- [ ] Search results UI with map
+### ✅ Sprint 6: Search & Discovery (COMPLETE)
+- ✅ Full-text search with weighted vectors
+- ✅ Trust-weighted ranking algorithm
+- ✅ Location filtering (city/state)
+- ✅ Specialty filtering
+- ✅ Experience and availability filters
+- ✅ Search analytics tracking
+- ✅ Click tracking and trending searches
+- ✅ Comprehensive search UI
+- ✅ Pagination with load more
+- ✅ Performance-optimized indexes
+
+**See:** `/SPRINT6_SEARCH.md` for detailed documentation
 
 ### Sprint 7: Admin Tools
 - [ ] Content moderation queue
@@ -475,5 +482,5 @@ None yet - fresh implementation!
 ---
 
 Last Updated: January 7, 2026
-Sprint: 5 of 8 complete (62.5% done)
-Status: Foundation ✅ | Verification ✅ | Trust Engine ✅ | Niccybox ✅ | Messaging ✅
+Sprint: 6 of 8 complete (75% done)
+Status: Foundation ✅ | Verification ✅ | Trust Engine ✅ | Niccybox ✅ | Messaging ✅ | Search ✅
