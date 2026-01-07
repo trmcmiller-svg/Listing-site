@@ -1,3 +1,5 @@
+import { TrustBadges } from "../../../components/TrustBadges";
+
 export type ExpertCardProps = {
   href: string;
   imageUrl: string;
@@ -6,6 +8,7 @@ export type ExpertCardProps = {
   price: string;
   description: string;
   hasTopExpertBadge?: boolean;
+  practitionerId?: string;
   onFavoriteClick?: () => void;
 };
 
@@ -52,6 +55,11 @@ export const ExpertCard = (props: ExpertCardProps) => {
             />
           </div>
         </div>
+        {props.practitionerId && (
+          <div className="mb-2">
+            <TrustBadges practitionerId={props.practitionerId} size="sm" />
+          </div>
+        )}
         <div className="text-sm box-border caret-transparent leading-[14px] mb-2 font-sf_pro_text">
           {props.price}
         </div>

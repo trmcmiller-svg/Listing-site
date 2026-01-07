@@ -1,11 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { recordTrustEvent } from "../utils/trustEngine";
+import { TrustBadges, TrustScore } from "../components/TrustBadges";
 
 export const ProviderProfilePage = () => {
+  const { providerId } = useParams();
   const [activeTab, setActiveTab] = useState<"reviews" | "about" | "expertise" | "location" | "photos" | "qna">("reviews");
 
+  useEffect(() => {
+    if (providerId) {
+      recordTrustEvent("profile_view", providerId);
+    }
+  }, [providerId]);
+
   const providerData = {
-    id: "1",
+    id: providerId || "1",
     name: "Luiza Brows",
     title: "Microblading Specialist",
     rating: 4.8,
@@ -88,13 +97,21 @@ export const ProviderProfilePage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-gray-600 mb-4">
+              <div className="flex items-center gap-2 text-gray-600 mb-3">
                 <span>📍</span>
                 <span>{providerData.address}</span>
               </div>
 
+              <div className="mb-4 space-y-2">
+                <TrustBadges practitionerId={providerData.id} showLabels={true} />
+                <TrustScore practitionerId={providerData.id} />
+              </div>
+
               <div className="flex gap-4">
-                <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <button
+                  onClick={() => recordTrustEvent("consult_request_sent", providerData.id)}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
                   Get a Consultation
                 </button>
                 <Link
